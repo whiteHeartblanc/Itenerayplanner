@@ -1,0 +1,83 @@
+<html>
+<head>
+    
+     <script src="https://code.jquery.com/jquery-3.4.1.js"> </script>
+    <script>
+    $(document).ready(function(){
+        $("td").click(function(){
+            let id= this.id
+            $("#id").val(id)
+            $("#formid").submit()
+        })
+        
+        
+        
+    })
+    
+    </script>
+    
+        <style>
+            body{
+                background-image:url(map.jpg)
+            }
+            input[type=submit]{
+                background-color:#9a9a9a;
+                border-radius:28px;
+                font-family:Verdana;
+            	font-size:12px;
+                color:white;
+            }
+            input[type=submit]:hover{
+                background-color:#bab9b9;
+            }
+            input#create{
+                background-color:#535353;
+                border-radius:28px;
+                font-family:Verdana;
+            	font-size:12px;
+                color:white;
+            }
+            input[type=submit]#create:hover{
+                background-color:#bab9b9;
+            }
+        </style>
+    </head>
+<body>
+   
+    <table>
+        <tbody>
+           
+    {{#each list}}
+            <tr>
+                <!-- td has _id-->
+      <td id="{{_id}}"> {{listname}}</td>
+  <td id="{{_id}}"> {{date}}</td>
+                    
+        </tr>
+        {{/each}}
+    </tbody>
+    </table>
+     <form action="createlistpage">
+     
+        <input id="create" type="submit" value="Create"> <br>
+        
+    </form>
+     <!-- allow td to be clicked 
+using script when clicked id from user it will submit-->
+    <form action="selectlist" id="formid">
+    <input type="hidden" name="id" id="id">
+    </form>
+    
+    
+    <form action="back">
+    <input type="submit" value="Back">
+    </form>
+    
+    </body>
+
+
+
+
+
+
+</html>
