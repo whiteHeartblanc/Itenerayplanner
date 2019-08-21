@@ -17,7 +17,7 @@ const hbs= require("hbs")
 mongoose.Promise= global.Promise;
 
 
-mongoose.connect("mongodb://localhost:27017/user",{
+mongoose.connect("mongodb+srv://whiteheart:<whiteheartblanc4>@cluster0-xvc88.azure.mongodb.net/test?retryWrites=true&w=majority",{
     useNewUrlParse: true
 })
 
