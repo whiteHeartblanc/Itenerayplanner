@@ -100,7 +100,7 @@ app.get("/", function(req,res){
   }
     }
     else{
-        res.sendFile(__dirname+"/login.html")
+        res.sendFile(__dirname+"/public/login.html")
     }
     
 })
