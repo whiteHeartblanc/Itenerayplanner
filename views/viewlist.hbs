@@ -4,11 +4,48 @@
      <script src="https://code.jquery.com/jquery-3.4.1.js"> </script>
     <script>
     $(document).ready(function(){
-        $("td").click(function(){
-            let id= this.id
+        $("button.select").click(function(){
+            let id= $(this).attr("data-id")
             $("#id").val(id)
             $("#formid").submit()
+            console.log(id)
         })
+          $("button.edit").click(function(){
+            let id= $(this).attr("data-id")
+            $("#editid").val(id)
+            $("#edit").submit()
+            console.log(id)
+        })
+        
+         $("button.delete").click(function(){
+            let id = $(this).attr("data-id")
+            $.ajax({
+                url: "deletelist",
+                method : "POST",
+                data : {
+                    
+                    id: id
+                },
+                success : function(result){
+                    console.log(result)// check if result (doc) is ok ==1 mean successfuly
+                    if(result.ok ==1){
+                        alert("Successfully Deleted")
+                        // TODO : Remove deleted Html
+                        // delete or remove row
+                        // get data id for td
+                        
+                        $("tr[data-id='" + id + "']").remove()
+                    }else{
+                        
+                        alert("Something went Wrong")
+                    }
+                        
+                }
+                
+            })
+            })
+                                  
+     
         
         
         
@@ -21,38 +58,80 @@
                 background-image:url(map.jpg)
             }
             input[type=submit]{
-                background-color:#9a9a9a;
-                border-radius:28px;
-                font-family:Verdana;
-            	font-size:12px;
-                color:white;
+	            display: inline-block;
+	            background-color: #f5f5f5;
+	            background-image: -webkit-linear-gradient(top,#f5f5f5,#f1f1f1);
+	            background-image: -moz-linear-gradient(top,#f5f5f5,#f1f1f1);
+	            background-image: -ms-linear-gradient(top,#f5f5f5,#f1f1f1);
+	            background-image: -o-linear-gradient(top,#f5f5f5,#f1f1f1);
+	            background-image: linear-gradient(top,#f5f5f5,#f1f1f1);
+	            color: #444;
+	
+	            border: 1px solid #dcdcdc;
+	            -webkit-border-radius: 2px;
+	            -moz-border-radius: 2px;
+	            border-radius: 2px;
+	
+	            cursor: default;
+	            font-size: 11px;
+	            font-weight: bold;
+	            text-align: center;
+	            height: 27px;
+	            line-height: 27px;
+	            min-width: 54px;
+	            padding: 0 8px;
+	            text-decoration: none;
             }
             input[type=submit]:hover{
-                background-color:#bab9b9;
+            	background-color: #F8F8F8;
+            	background-image: -webkit-linear-gradient(top,#f8f8f8,#f1f1f1);
+            	background-image: -moz-linear-gradient(top,#f8f8f8,#f1f1f1);
+            	background-image: -ms-linear-gradient(top,#f8f8f8,#f1f1f1);
+            	background-image: -o-linear-gradient(top,#f8f8f8,#f1f1f1);
+            	background-image: linear-gradient(top,#f8f8f8,#f1f1f1);
+            	
+            	border: 1px solid #C6C6C6;
+            	color: #333;
+            	
+            	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+            	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+            	box-shadow: 0px 1px 1px rgba(0,0,0,.1);
             }
-            input#create{
-                background-color:#535353;
-                border-radius:28px;
-                font-family:Verdana;
-            	font-size:12px;
-                color:white;
-            }
-            input[type=submit]#create:hover{
-                background-color:#bab9b9;
-            }
+
         </style>
     </head>
 <body>
    
     <table>
         <tbody>
-           
+           <h3> Your Lists </h3>
     {{#each list}}
-            <tr>
+        <!--    <tr>
+                
+                tr data-id= "{{_id}}">
+                
+                <td >
+                    <span delete data-id="{{_id}}">
+                        {{username}}
+                    </span>
+                    <button class="delete" data-id="{{_id}}"> Delete </button>
+                </td>
+                <td id="{{_id}}"> {{username}}</td>
+                <!-- td has _id
+                
+      <td id=_id> username
+                <button class="delete"> Delete</button></td>
+             -->
+                
+                
+        <tr>
+            <tr data-id="{{_id}}">
                 <!-- td has _id-->
-      <td id="{{_id}}"> {{listname}}</td>
-  <td id="{{_id}}"> {{date}}</td>
-                    
+      <td> {{name}}</td>
+  <td > {{date}}</td>
+ <td> <button class="select" data-id="{{_id}}"> Select</button></td>    
+        <td> <button class="edit"data-id="{{_id}}"> Edit</button> </td>    
+                <td><button class="delete" data-id="{{_id}}"> Delete</button></td>    
         </tr>
         {{/each}}
     </tbody>
@@ -64,10 +143,19 @@
     </form>
      <!-- allow td to be clicked 
 using script when clicked id from user it will submit-->
-    <form action="selectlist" id="formid">
+    <form action="selectlist" id="formid" method="POST">
     <input type="hidden" name="id" id="id">
     </form>
     
+     <form action="deletelist" id="deletelist" method="POST">
+    <input type="hidden" name="id" id="deleteid">
+    </form>
+    
+    <form action="edit" id="edit" method="POST">
+    <input type="hidden" name="id" id="editid">
+    </form>
+   
+   
     
     <form action="back">
     <input type="submit" value="Back">

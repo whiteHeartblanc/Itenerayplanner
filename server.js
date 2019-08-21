@@ -6,9 +6,11 @@ const cookieparser= require("cookie-parser")
 const app = express()
 const mongoose = require("mongoose")
 const {User} = require("./model/user.js")
+const {List} = require("./model/list.js")
+const {Item} = require("./model/item.js")
 const hbs= require("hbs")
 
-
+ ObjectID = require('mongodb').ObjectID; 
 
 
 
@@ -35,16 +37,76 @@ app.use(express.static(__dirname+"/public"))
 
 app.get("/", function(req,res){
 
-  
+  let itemlist;
+    let listname;
+    let date;
+    console.log(req.cookies.curList)
    // console.log(req.cookies.loggeduser)
     if(req.cookies.loggeduser){
+        if(!req.cookies.curList){
         
-        
+        console.log(req.cookies.UserId)
     
       res.render("home.hbs",{
         username: req.cookies.loggeduser
+          
       })
+        }
+        
+        
+        
+        else{
+            console.log("whyareyouhere")
+        List.findOne({
+           _id: req.cookies.curList
+    }, (err,doc)=>{
+        
+        if(err){
+            res.send("Something went Wrong")
+        }else{
+            
+    listname= doc.name
+             itemlist= doc.item
+            date= doc.date
+            console.log(doc.name)
+            console.log(listname)
+        }
+           
+    
+if(itemlist==null){
+    console.log("listname"+ listname)
+       res.render("home.hbs",{
+        username: req.cookies.loggeduser,
+        list: listname,
+        date: date
+              })
+}else{
+  
+  List.find({  _id : { $in : itemlist}
+    }, (err,docs)=>{
+        
+   if(err){
+            res.send("Something went Wrong")
+        }else{
+            
+     res.render("home.hbs",{
+        username: req.cookies.loggeduser,
+        list: listname,
+         items: docs,
+         date: date
+              })
+            console.log(docs);
+        }
+        
+    })  
+}
+            
+            
+           
+        })
+                    
   }
+    }
     else{
         res.sendFile(__dirname+"/public/login.html")
     }
@@ -80,14 +142,21 @@ app.post("/login", urlencoder, function(req, res){
            
         //   req.session.username = doc.username
                let fs= username
-   
+               let fs2 = doc._id
     res.cookie("loggeduser", fs,{
         maxAge : 1000*60*60*24*31
         // 1 month
         
         
     })
-             
+           res.cookie("UserId", fs2, {
+                maxAge : 1000*60*60*24*31
+               
+               
+           })
+          
+           
+   
     
 
            res.redirect("/")
@@ -122,13 +191,20 @@ app.post("/register", urlencoder, function(req,res){
              console.log(doc)
             // req.session.username=doc.username
               let fs= username
-   
+              let fs2 = doc._id
+               
     res.cookie("loggeduser", fs,{
           maxAge : 1000*60*60*24*31
         // 1 month
         
         
     })
+             res.cookie("UserId", fs2, {
+                maxAge : 1000*60*60*24*31
+               
+               
+           })   
+  
              res.redirect("/")
              
              
@@ -147,12 +223,60 @@ app.get("/Logout", function(req,res){
     
     console.log(req.cookies.loggeduser)
   res.clearCookie("loggeduser");
-    
+      res.clearCookie("UserId");
+     res.clearCookie("curList");
     res.redirect("/")
 })
 
 app.post("/createlist", urlencoder, function(req,res){
-    
+
+     let  listname= req.body.listname
+    let date = req.body.date
+   
+      let list = new List({
+        
+               name : listname,
+               date : date 
+         
+         
+         
+         })
+         list.save().then((doc)=>{
+             
+             console.log(doc)
+            // req.session.username=doc.username
+             
+  
+             
+             
+             
+             
+         }, (err)=>{
+            
+             res.send("Something went wrong")
+             
+             
+         })
+    User.update  ({
+       _id : req.cookies.UserId
+    },{
+         $push: { list:list  } 
+        
+    },(err, doc)=>{
+        
+        
+       
+        
+        if(err){
+            res.send("something went wrong")
+        }else{
+          
+                res.redirect("/")
+        }
+        
+        
+    })
+
     
 })
 
@@ -163,41 +287,167 @@ app.get("/createlistpage",  function(req,res){
 })
 
 app.post("/deletelist", urlencoder, function(req,res){
-})
-
-app.post("/selectist", urlencoder, function(req,res){
-})
-
-
-
-app.post("/viewlist", urlencoder, function(req,res){
     
-    
-    
-       User.find({
-           
+   
+    List.deleteOne({
+        _id: req.body.id
         
-    }, (err,docs)=>{
+    }, (err,doc)=>{
+        if(err){
+            res.send(err)
+        }else{
+           
+        }
+        
+    })
+    
+    User.update({
+        _id:req.body.id},{
+                $pull: { list: req.body.id  } 
+            },(err, doc)=>{
+        
+        
+       
+        
+        if(err){
+            res.send("something went wrong")
+        }else{
+          
+                res.send(doc)
+        }
+        
+        
+    })
+    
+})
+
+app.post("/selectlist", urlencoder, function(req,res){
+    fs3= req.body.id;
+   // console.log(fs3+"thisoneoverhere")
+    res.cookie("curList", fs3,{
+        maxAge : 1000*60*60*24*31
+        // 1 month
+        
+        
+    })
+    console.log(req.cookies.curList)
+    res.redirect("/")
+   
+    
+})
+
+
+
+app.get("/viewlist", function(req,res){
+   let listids;
+    console.log(req.cookies.UserId)
+     User.findOne({
+           _id: req.cookies.UserId
+    }, (err,doc)=>{
         // callback function
         if(err){
             res.send("Something went Wrong")
         }else{
             
             
-            //render all lists
-         res.render("viewlist.hbs", {
-                users:docs
-            })
+            
+            console.log(doc.list)
+             listids= doc.list
+            console.log("why wont it work" +listids)
         }
+           
+       
+console.log("thisone"+listids.map(ObjectID))
+  
+  List.find({  _id : { $in : listids }
+    }, (err,docs)=>{
+        
+   if(err){
+            res.send("Something went Wrong")
+        }else{
+            
+        res.render("viewlist.hbs",{
+        list:docs
+      })
+            console.log(docs);
+        }
+        
+    }) 
     
 
-        
+  /*   List.find({  _id : { $in: User.find(req.cookies.UserId).map(function (doc) {
+      return doc._id
     })
+                        }
+    }, (err,docs)=>{
+        
+   if(err){
+            res.send(err)
+        }else{
+            
+       // res.render("viewlist.hbs",{
+      //  list:docs
+     // })
+            console.log(docs);
+        }*/
+        
+    }) 
 })
     
 
 app.post("/deletefromlist", urlencoder, function(req,res){
 })
+app.post("/edit", urlencoder, function(req,res){
+    console.log(req.body.id)
+    List.findOne({
+        _id: req.body.id 
+              }, (err,doc)=>{
+        
+   if(err){
+            res.send("Something went Wrong")
+        }else{
+            
+        res.render("edit.hbs",{
+        list:doc.name,
+        id: doc._id
+      })
+            console.log(doc);
+        }
+        
+    }) 
+    
+})
+app.post("/editlist", urlencoder, function(req,res){
+    let  listname= req.body.listname
+    let date = req.body.date
+   let id= req.body.id
+   console.log(listname + date+id)
+       List.updateOne({
+           _id:id
+       },{  
+               name : listname,
+               date : date 
+       },(err, doc)=>{
+        
+        
+       
+        
+        if(err){
+            res.send(err)
+        }else{
+          console.log(doc)
+                res.redirect("/viewlist")
+        }
+         
+         
+         })
+    
+    
+    
+    
+    
+})
+
 
     
     app.post("/edititemtime", urlencoder, function(req,res){
@@ -233,6 +483,7 @@ app.post("/addtolist", urlencoder, (req,res)=>{
    // })
     
 })
+
 app.post("/search", urlencoder, function(req,res){
     
     
