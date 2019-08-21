@@ -22,11 +22,11 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lenard9999/WEBAPDE-MP2.git"
+    "url": "git+https://github.com/whiteHeartBlanc/IteneraryPlanner.git"
   },
   "bugs": {
-    "url": "https://github.com/Lenard9999/WEBAPDE-MP2/issues"
+    "url": "https://github.com/whiteHeartBlanc/IteneraryPlanner/issues"
   },
-  "homepage": "https://github.com/Lenard9999/WEBAPDE-MP2#readme",
+  "homepage": "https://github.com/whiteHeartBlanc/IteneraryPlanner#readme",
   "description": ""
 }
