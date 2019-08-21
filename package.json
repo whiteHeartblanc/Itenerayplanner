@@ -22,11 +22,11 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/whiteHeartBlanc/IteneraryPlanner.git"
+    "url": "git+https://github.com/whiteHeartblanc/Iteneraryplanner.git"
   },
   "bugs": {
-    "url": "https://github.com/whiteHeartBlanc/IteneraryPlanner/issues"
+    "url": "https://github.com/whiteHeartblanc/Iteneraryplanner/issues"
   },
-  "homepage": "https://github.com/whiteHeartBlanc/IteneraryPlanner#readme",
+  "homepage": "https://github.com/whiteHeartblanc/Iteneraryplanner#readme",
   "description": ""
 }
