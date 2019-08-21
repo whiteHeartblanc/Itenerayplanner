@@ -531,8 +531,8 @@ app.get("/back", function(req,res){
 })
 
 
-var port = process.env.PORT || 3000
-app.listen(port, function(){
+
+app.listen(process.env.PORT || 3000, function(){
     
     console.log("live at port 3000")
 })
