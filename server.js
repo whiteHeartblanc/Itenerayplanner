@@ -173,14 +173,17 @@ app.post("/login", urlencoder, function(req, res){
            res.send("Something went wrong")
        }else if(!doc){
          // alert("Username does not exist");
-           res.send("Username does not exist");
+           //res.send("Username does not exist");
+            res.sendFile(__dirname+"/public/usernotexist.html")
+    
        }
        else{
            let passwordDb= CryptoJS.AES.decrypt(doc.password,"secret")
            let passwordDbString= passwordDb.toString(CryptoJS.enc.Utf8)
            if(password!= passwordDbString){
             //   alert("Password is incorrect");
-               res.send("Password is incorrect");
+             //  res.send("Password is incorrect");
+                res.sendFile(__dirname+"/public/usernotexist.html")
            }
            else{
            
