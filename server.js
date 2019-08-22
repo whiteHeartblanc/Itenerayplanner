@@ -10,9 +10,9 @@ const {List} = require("./model/list.js")
 const {Item} = require("./model/item.js")
 const hbs= require("hbs")
 const alert = require("alert-node")
-var CryptoJS = require("crypto-js");
+var CryptoJS = require("crypto-js")
 
- ObjectID = require('mongodb').ObjectID; 
+ ObjectID = require('mongodb').ObjectID
 
 
 
