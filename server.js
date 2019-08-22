@@ -183,7 +183,7 @@ app.post("/login", urlencoder, function(req, res){
            if(password!= passwordDbString){
             //   alert("Password is incorrect");
              //  res.send("Password is incorrect");
-                res.sendFile(__dirname+"/public/usernotexist.html")
+                res.sendFile(__dirname+"/public/passwordwrong.html")
            }
            else{
            
