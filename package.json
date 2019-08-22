@@ -27,5 +27,6 @@
     "hbs": "^4.0.4",
     "mongoose": "^5.6.10",
     "spawn-sync": "^2.0.0"
-  }
+  },
+  "devDependencies": {}
 }
