@@ -9,7 +9,7 @@ const {User} = require("./model/user.js")
 const {List} = require("./model/list.js")
 const {Item} = require("./model/item.js")
 const hbs= require("hbs")
-const alert = require("alert-node")
+//const alert = require("alert-node")
 var CryptoJS = require("crypto-js")
 
  ObjectID = require('mongodb').ObjectID
@@ -172,13 +172,15 @@ app.post("/login", urlencoder, function(req, res){
        if(err){
            res.send("Something went wrong")
        }else if(!doc){
-          alert("Username does not exist");
+         // alert("Username does not exist");
+           res.send("Username does not exist");
        }
        else{
            let passwordDb= CryptoJS.AES.decrypt(doc.password,"secret")
            let passwordDbString= passwordDb.toString(CryptoJS.enc.Utf8)
            if(password!= passwordDbString){
-               alert("Password is incorrect");
+            //   alert("Password is incorrect");
+               res.send("Password is incorrect");
            }
            else{
            
