@@ -39,14 +39,8 @@ app.use(express.static(__dirname+"/public"))
 
 
 app.get("/", function(req,res){
-res.redirect("/base")
- 
-    
-})
-app.get("base", function(req,res){
-    
-    
-     let itemlist;
+
+  let itemlist;
     let listname;
     let date;
     console.log(req.cookies.curList)
